@@ -1,0 +1,32 @@
+version: "2"
+linters:
+  enable:
+    - gocritic
+    - predeclared
+    - revive
+    - staticcheck
+    - unconvert
+  settings:
+    gocritic:
+      enabled-checks:
+        - deferInLoop
+    govet:
+      disable:
+        - fieldalignment
+      enable-all: true
+    revive:
+      rules:
+        - name: var-naming
+          arguments:
+            - - ID
+          severity: warning
+          disabled: false
+  exclusions:
+    rules:
+      - text: 'shadow: declaration of "(err|ctx)" shadows declaration at'
+        linters:
+          - govet
+formatters:
+  enable:
+    - gofumpt
+    - goimports

@@ -1,0 +1,46 @@
+steps:
+  lint:
+    image: golangci/golangci-lint:v2.4.0
+    commands:
+      - golangci-lint run -v --timeout 10m ./...
+    environment:
+      GOPROXY:
+        from_secret: goproxy_url
+
+  build:
+    image: woodpeckerci/plugin-docker-buildx:6.0.2
+    settings:
+      registry: registry.megpoid.dev
+      repo: registry.megpoid.dev/codestation/portainer-config-sync
+      tags:
+        - '${CI_COMMIT_BRANCH}'
+        - '${CI_COMMIT_BRANCH}-${CI_COMMIT_SHA:0:10}'
+      config:
+        from_secret: registry_credentials
+    when:
+      event:
+        - push
+        - manual
+
+  build-tag:
+    image: woodpeckerci/plugin-docker-buildx:6.0.2
+    settings:
+      registry: registry.megpoid.dev
+      repo: registry.megpoid.dev/codestation/kube-dns-sync
+      tags:
+        - latest
+        - ${CI_COMMIT_TAG##v}
+      build_args:
+        CI_COMMIT_TAG: "${CI_COMMIT_TAG}"
+      config:
+        from_secret: registry_credentials
+    when:
+      event: tag
+
+when:
+  event:
+    - push
+    - tag
+    - manual
+  branch:
+    - master
