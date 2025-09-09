@@ -81,8 +81,6 @@ type AccessPolicy struct {
 }
 
 type OIDC struct {
-	Enabled          bool     `yaml:"enabled"`
-	IssuerURL        string   `yaml:"issuerURL"`
 	ClientID         string   `yaml:"clientID"`
 	ClientSecret     string   `yaml:"clientSecret"`
 	Scopes           []string `yaml:"scopes"`
@@ -92,9 +90,6 @@ type OIDC struct {
 	ResourceURI      string   `yaml:"resourceURI"`
 	LogoutURI        string   `yaml:"logoutURI"`
 	RedirectURI      string   `yaml:"redirectURI"`
-	GroupsClaim      string   `yaml:"groupsClaim"`
-	AdminGroup       string   `yaml:"adminGroup"`
-	UserGroup        string   `yaml:"userGroup"`
 	DefaultTeam      string   `yaml:"defaultTeam"`
 }
 

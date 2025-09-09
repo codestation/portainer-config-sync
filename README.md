@@ -90,8 +90,6 @@ endpoints:
     group: "Development"
 
 oidc:
-  enabled: true
-  issuerURL: "https://keycloak.example.com/realms/myrealm"
   clientID: "portainer"
   # It's recommended to use the OIDC_CLIENT_SECRET environment variable.
   clientSecret: "your-oidc-secret"
