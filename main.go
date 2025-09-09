@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net/url"
 	"os"
 	"slices"
 	"strconv"
@@ -131,10 +132,16 @@ func main() {
 
 	slog.Info("Starting Portainer initialization")
 
+	portainerURL, err := url.Parse(cfg.URL)
+	if err != nil {
+		slog.Error("Failed to parse URL", "url", cfg.URL, "error", err)
+		os.Exit(1)
+	}
+
 	pClient := portainer.NewHTTPClientWithConfig(strfmt.Default, &portainer.TransportConfig{
-		Host:     cfg.URL,
+		Host:     portainerURL.Host,
 		BasePath: portainer.DefaultBasePath,
-		Schemes:  portainer.DefaultSchemes,
+		Schemes:  []string{portainerURL.Scheme},
 	})
 
 	authParams := auth.NewAuthenticateUserParams().WithBody(&models.AuthAuthenticatePayload{

@@ -43,7 +43,7 @@ The tool is configured using a single YAML file (e.g., `config.yaml`).
 ### Example `config.yaml`
 
 ```yaml
-url: "portainer.example.com"
+url: "https://portainer.example.com"
 auth:
   username: "admin"
   # It's recommended to use the PORTAINER_PASSWORD environment variable instead of setting the password here.
