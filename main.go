@@ -123,7 +123,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	portainerPassword := os.Getenv("PORTAINER_PASSWORD")
+	portainerPassword := os.Getenv("PORTAINER_ADMIN_PASSWORD")
 	if portainerPassword != "" {
 		slog.Info("Using password from environment variable")
 		cfg.Auth.Password = portainerPassword

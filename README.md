@@ -23,7 +23,7 @@ You need a `config.yaml` file to define your desired Portainer configuration.
 ```bash
 docker run --rm -it \
   -v $(pwd)/config.yaml:/app/config.yaml \
-  -e PORTAINER_PASSWORD="your-portainer-admin-password" \
+  -e PORTAINER_ADMIN_PASSWORD="your-portainer-admin-password" \
   -e OIDC_CLIENT_SECRET="your-oidc-client-secret" \
   ghcr.io/codestation/portainer-config:latest
 ```
@@ -33,7 +33,7 @@ docker run --rm -it \
 The tool uses environment variables for sensitive data and optional configuration overrides.
 
 *   `CONFIG_PATH`: Path to the configuration file inside the container. Defaults to `config.yaml`.
-*   `PORTAINER_PASSWORD`: The password for the Portainer admin user. This overrides the `password` field in `config.yaml`.
+*   `PORTAINER_ADMIN_PASSWORD`: The password for the Portainer admin user. This overrides the `password` field in `config.yaml`.
 *   `OIDC_CLIENT_SECRET`: The client secret for your OIDC provider. This overrides the `clientSecret` field in the OIDC configuration.
 
 ## Configuration
