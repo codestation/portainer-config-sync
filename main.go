@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"log/slog"
 	"net/url"
@@ -261,7 +263,15 @@ func (pc *PortainerClient) SyncUser(ctx context.Context, userConfig *User) error
 	// Create user if not found
 	if currentUser == nil {
 		slog.Info("User not found, creating it", "username", username)
-		password := ""
+
+		randomBytes := make([]byte, 16)
+		_, err := rand.Read(randomBytes)
+		if err != nil {
+			return fmt.Errorf("failed to generate random password for user '%s': %w", username, err)
+		}
+
+		randomPassword := hex.EncodeToString(randomBytes)
+
 		var role int64
 		if userConfig.Admin {
 			role = 1 // Admin
@@ -270,7 +280,7 @@ func (pc *PortainerClient) SyncUser(ctx context.Context, userConfig *User) error
 		}
 		createUserParams := users.NewUserCreateParams().WithBody(&models.UsersUserCreatePayload{
 			Username: &username,
-			Password: &password,
+			Password: &randomPassword,
 			Role:     &role,
 		})
 		userResponse, err := pc.Client.Users.UserCreate(createUserParams.WithContext(ctx), pc.Auth)
@@ -600,6 +610,7 @@ func (pc *PortainerClient) SyncEndpoint(ctx context.Context, endpoint *Endpoint)
 		slog.Info("Endpoint not found, will be created", "endpoint", endpoint.Name)
 
 		var endpointType int64
+
 		switch endpoint.Type {
 		case "kubernetes":
 			endpointType = 5
@@ -615,7 +626,8 @@ func (pc *PortainerClient) SyncEndpoint(ctx context.Context, endpoint *Endpoint)
 			WithEndpointCreationType(endpointType).
 			WithURL(&endpoint.URL).
 			WithTLS(&tls).
-			WithTLSSkipVerify(&tls)
+			WithTLSSkipVerify(&tls).
+			WithTLSSkipClientVerify(&tls)
 
 		if endpointGroup != nil {
 			createParams = createParams.WithGroupID(&endpointGroup.ID)
